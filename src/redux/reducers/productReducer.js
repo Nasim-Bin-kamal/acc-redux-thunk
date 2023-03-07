@@ -1,9 +1,11 @@
 import {
   ADD_PRODUCT,
   ADD_TO_CART,
+  LOAD_PRODUCTS,
   PRODUCT_LOADED,
   REMOVE_FROM_CART,
   REMOVE_PRODUCT,
+  UPDATE_PRODUCT,
 } from "../actionTypes/actionTypes";
 
 const initialState = {
@@ -17,6 +19,12 @@ const productReducer = (state = initialState, action) => {
   );
 
   switch (action.type) {
+    case LOAD_PRODUCTS:
+      return {
+        ...state,
+        products: action.payload,
+      };
+
     case ADD_PRODUCT:
       return {
         ...state,
@@ -28,6 +36,20 @@ const productReducer = (state = initialState, action) => {
         products: state.products.filter(
           (product) => product._id !== action.payload
         ),
+      };
+    case UPDATE_PRODUCT:
+      const updatedProducts = state.products.map((product) => {
+        if (product._id === action.payload._id) {
+          return {
+            ...product,
+            ...action.payload,
+          };
+        }
+        return product;
+      });
+      return {
+        ...state,
+        products: updatedProducts,
       };
     case ADD_TO_CART:
       if (selectedProduct) {
